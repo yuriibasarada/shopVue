@@ -1,28 +1,26 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Shop />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Shop from './components/Shop.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Shop
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import "~materialize-css/dist/css/materialize.min.css";
+  @import "~nouislider/distribute/nouislider.min.css";
+
+  #app {
+   width: 100%;
+   height: 100%;
+ }
 </style>
