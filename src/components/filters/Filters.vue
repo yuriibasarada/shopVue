@@ -1,39 +1,44 @@
 <template>
     <div class="filters" :class="{close: !this.openFilters}">
         <categories-filter
-                :categoryId="categoryId"
+                :current_category_id="current_category_id"
                 :categories="categories"
                 @changeCategory="changeCategory"
                 @changeValue="changeValue"
                 v-show="this.openFilters"
         />
-        <div class="price-slider">
+        <div class="test">
             <range-slider
-                    :min="longMinMax.min"
-                    :max="longMinMax.max"
+                    :min="priceMinMax.min"
+                    :max="priceMinMax.max"
                     :title="'Price'"
                     :unit="' ₴ '"
                     v-show="this.openFilters"
+                    :key="current_category_id"
             />
         </div>
-        <div class="price-slider">
+        <div class="test">
             <range-slider
                     :min="weightMinMax.min"
                     :max="weightMinMax.max"
                     :title="'Weight'"
                     :unit="' hr '"
                     v-show="this.openFilters"
+                    :key="current_category_id"
             />
         </div>
-        <div class="price-slider">
+        <div class="test">
             <range-slider
-                    :min="priceMinMax.min"
-                    :max="priceMinMax.max"
+                    :min="longMinMax.min"
+                    :max="longMinMax.max"
                     :title="'Long'"
                     :unit="' sm '"
                     v-show="this.openFilters"
+                    :key="current_category_id"
             />
         </div>
+
+
     </div>
 </template>
 
@@ -78,7 +83,7 @@
                     img: 'more.svg'
                 },
             ],
-            categoryId: 0,
+            current_category_id: 0,
             longMinMax: 0,
             weightMinMax: 0,
             priceMinMax: 0
@@ -94,16 +99,18 @@
             }
         },
         methods: {
-            changeCategory(categoryId) {
-                this.categoryId = categoryId
-                if (categoryId) {
-                    this.filterItems = this.itemsData.filter(function (value) {
-                        return value.category_id === categoryId
+            changeCategory(category_id) {
+                this.current_category_id = category_id
+                let itemInCategory;
+                if (category_id) {
+                    itemInCategory = this.itemsData.filter(function (value) {
+                        return value.category_id === category_id
                     })
                 } else {
-                    this.filterItems = this.itemsData
+                    itemInCategory = this.itemsData
                 }
-                this.setupPagination(this.filterItems)
+                this.updateRangeSlider(itemInCategory)
+                this.$emit('setUpFilterItems', itemInCategory)
             },
             changeValue(data) {
                 if (data.type === 'Long') {
@@ -119,7 +126,7 @@
                         return item.price > data.value[0] && item.price < data.value[1]
                     })
                 }
-                this.setupPagination(this.filterItems)
+                this.$emit('setUpFilterItems', this.filterItems)
             },
             findMinMax(arr, type) {
                 let min = arr[0][type], max = arr[0][type];
@@ -138,8 +145,6 @@
             }
         },
         mounted() {
-            console.log(this.itemsData)
-            this.$emit('setUpFilterItems', this.itemsData)
         },
         beforeMount() {
             this.updateRangeSlider(this.itemsData)

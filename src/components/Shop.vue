@@ -7,7 +7,7 @@
 
         <Filters
                 :openFilters="openFilters"
-                :items="itemsData"
+                :itemsData="filterItems"
                 @setUpFilterItems="setUpFilterItems"
         />
         <div class="shop__items">
@@ -76,7 +76,7 @@
                     name: 'Knife 4',
                     description: 'Knife for you wife',
                     weight: 100.1,
-                    long: 55,
+                    long: 125,
                     material: 'Carbon',
                     brand: 'Gucci',
                     price: 20,
@@ -91,7 +91,7 @@
                     long: 33,
                     material: 'Carbon',
                     brand: 'Gucci',
-                    price: 20,
+                    price: 359,
                     category_id: 2,
 
                 },
@@ -112,7 +112,7 @@
                     name: 'Knife 7',
                     description: 'Knife for you wife',
                     weight: 1005.1,
-                    long: 64,
+                    long: 888,
                     material: 'Carbon',
                     brand: 'Gucci',
                     price: 20,
@@ -450,11 +450,15 @@
         mounted() {
             this.setupPagination(this.filterItems)
         },
+        beforeMount() {
+            this.filterItems = this.itemsData
+        },
         methods: {
             toggleFilters() {
                 this.openFilters = !this.openFilters
             },
             setUpFilterItems(items) {
+                this.setupPagination(items)
                 this.filterItems = items
             }
         },
