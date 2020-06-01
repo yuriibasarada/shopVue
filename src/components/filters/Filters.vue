@@ -86,7 +86,8 @@
             current_category_id: 0,
             longMinMax: 0,
             weightMinMax: 0,
-            priceMinMax: 0
+            priceMinMax: 0,
+            filterItems: 0
         }),
         props: {
             openFilters: {
@@ -96,11 +97,12 @@
             itemsData: {
                 type: Array,
                 default: () => []
-            }
+            },
         },
         methods: {
             changeCategory(category_id) {
                 this.current_category_id = category_id
+                console.log(this.itemsData)
                 let itemInCategory;
                 if (category_id) {
                     itemInCategory = this.itemsData.filter(function (value) {

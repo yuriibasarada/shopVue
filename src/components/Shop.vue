@@ -7,7 +7,8 @@
 
         <Filters
                 :openFilters="openFilters"
-                :itemsData="filterItems"
+                :itemsData="itemsData"
+                :filterData="filterItems"
                 @setUpFilterItems="setUpFilterItems"
         />
         <div class="shop__items">
