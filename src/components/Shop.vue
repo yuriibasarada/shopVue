@@ -1,5 +1,10 @@
 <template>
     <div class="shop" :class="{full: !openFilters}">
+        <Sorting
+            :filterItems="filterItems"
+            @setUpSortedItems="setUpFilterItems"
+        />
+
         <div class="icons">
             <i @click="toggleFilters" v-show="openFilters" class="close-button material-icons">close</i>
             <i @click="toggleFilters" v-if="!openFilters" class="open-button material-icons">filter_list</i>
@@ -8,11 +13,10 @@
         <Filters
                 :openFilters="openFilters"
                 :itemsData="itemsData"
-                :filterData="filterItems"
                 @setUpFilterItems="setUpFilterItems"
         />
         <div class="shop__items">
-            <Item v-for="item in filterItems" :key="item.id" :item="item"/>
+            <Item v-for="item in items" :key="item.id" :item="item"/>
         </div>
         <Paginate
                 v-model="page"
@@ -30,11 +34,12 @@
 <script>
     import Item from './Item'
     import Filters from './filters/Filters'
+    import Sorting from './sorting/Sorting'
     import paginationMixin from '@/mixins/pagination.mixin'
 
     export default {
         name: 'Shop',
-        components: {Item, Filters},
+        components: {Item, Filters, Sorting},
         mixins: [paginationMixin],
         data: () => ({
             itemsData: [
@@ -44,10 +49,11 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 1,
-                    material: 'Carbon',
-                    brand: 'Gucci',
-                    price: 20,
+                    material_id: 2,
+                    brand_id: 2,
+                    price: 554,
                     category_id: 1,
+                    sales: 3
                 },
                 {
                     id: 2,
@@ -55,11 +61,10 @@
                     description: 'Knife for you wife',
                     weight: 14.1,
                     long: 2,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 2,
+                    brand_id: 2,
                     price: 20,
-                    category_id: 1,
-
+                    category_id: 1
                 },
                 {
                     id: 3,
@@ -67,10 +72,11 @@
                     description: 'Knife for you wife',
                     weight: 16.1,
                     long: 33,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 2,
+                    brand_id: 2,
                     price: 150,
                     category_id: 1,
+                    sales: 10
                 },
                 {
                     id: 4,
@@ -78,11 +84,10 @@
                     description: 'Knife for you wife',
                     weight: 100.1,
                     long: 125,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 2,
+                    brand_id: 3,
                     price: 20,
                     category_id: 2,
-
                 },
                 {
                     id: 5,
@@ -90,11 +95,11 @@
                     description: 'Knife for you wife',
                     weight: 125.1,
                     long: 33,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 2,
+                    brand_id: 3,
                     price: 359,
                     category_id: 2,
-
+                    sales: 123
                 },
                 {
                     id: 6,
@@ -102,11 +107,11 @@
                     description: 'Knife for you wife',
                     weight: 163.1,
                     long: 54,
-                    material: 'Carbon',
-                    brand: 'Gucci',
-                    price: 20,
+                    material_id: 3,
+                    brand_id: 3,
+                    price: 2,
                     category_id: 2,
-
+                    sales: 25
                 },
                 {
                     id: 7,
@@ -114,11 +119,11 @@
                     description: 'Knife for you wife',
                     weight: 1005.1,
                     long: 888,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 3,
+                    brand_id: 5,
                     price: 20,
                     category_id: 3,
-
+                    sales: 26
                 },
                 {
                     id: 8,
@@ -126,9 +131,9 @@
                     description: 'Knife for you wife',
                     weight: 1999.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
-                    price: 20,
+                    material_id: 3,
+                    brand_id: 5,
+                    price: 134,
                     category_id: 3,
 
                 },
@@ -138,8 +143,8 @@
                     description: 'Knife for you wife',
                     weight: 5888.1,
                     long: 33,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 3,
+                    brand_id: 5,
                     price: 20,
                     category_id: 3,
 
@@ -150,8 +155,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 3,
+                    brand_id: 2,
                     price: 20,
                     category_id: 1,
 
@@ -162,8 +167,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 3,
+                    brand_id: 2,
                     price: 20,
                     category_id: 1,
 
@@ -174,8 +179,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 3,
+                    brand_id: 2,
                     price: 20,
                     category_id: 1,
 
@@ -186,8 +191,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 2,
                     price: 20,
                     category_id: 1,
 
@@ -198,8 +203,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -210,8 +215,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -222,8 +227,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -234,8 +239,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -246,8 +251,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -258,8 +263,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -270,8 +275,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -282,8 +287,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -294,8 +299,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -306,8 +311,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 4,
                     price: 20,
                     category_id: 1,
 
@@ -318,8 +323,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 4,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -330,8 +335,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -342,8 +347,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -354,8 +359,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -366,8 +371,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -378,8 +383,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -390,8 +395,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 5,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -402,8 +407,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 1,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -414,8 +419,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 1,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -426,8 +431,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 1,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -438,8 +443,8 @@
                     description: 'Knife for you wife',
                     weight: 11.1,
                     long: 124,
-                    material: 'Carbon',
-                    brand: 'Gucci',
+                    material_id: 1,
+                    brand_id: 1,
                     price: 20,
                     category_id: 1,
 
@@ -488,6 +493,7 @@
         }
 
         &__items {
+            padding-top: 65px;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-evenly;

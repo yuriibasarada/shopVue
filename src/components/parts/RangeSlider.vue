@@ -1,6 +1,6 @@
 <template>
     <div class="range-slider">
-        <h1>{{title}}</h1>
+        <h1>{{title | capitalize}}</h1>
         <div ref="slider"></div>
         <div class="input-block">
             <div class="input-field ">
@@ -51,7 +51,6 @@
             this.slider = this.$refs.slider;
             this.setUpSlider()
             window.M.updateTextFields()
-
         },
         methods: {
             setUpSlider() {
@@ -73,26 +72,27 @@
                     }
                 })
                 let p = this
-                this.slider.noUiSlider.on('update', function (values, handle) {
-                    let value = values[handle]
-                    if (handle) {
-                        p.maxValue = Math.round(value)
-                        p.$emit('changeValue', {value: values, type: p.title})
-                    } else {
-                        p.minValue = Math.round(value)
-                        p.$emit('changeValue', {value: values, type: p.title})
-                    }
-                })
+                this.slider.noUiSlider.on('set', this.changeSlider)
                 this.$refs.firstPriceInput.addEventListener('change', function () {
                     p.slider.noUiSlider.set([this.value, null])
                 })
                 this.$refs.secondPriceInput.addEventListener('change', function () {
                     p.slider.noUiSlider.set([null, this.value])
                 })
+            },
+            changeSlider(values, handle) {
+                let value = values[handle]
+                if (handle) {
+                    this.maxValue = Math.round(value)
+                    this.$emit('changeValue', {value: values, type: this.title})
+                } else {
+                    this.minValue = Math.round(value)
+                    this.$emit('changeValue', {value: values, type: this.title})
+                }
             }
         },
         beforeDestroy() {
-            if(this.slider && this.slider.destroy) {
+            if (this.slider && this.slider.destroy) {
                 this.slider.destroy()
             }
         }
@@ -105,6 +105,7 @@
         h1 {
             color: white !important;
             text-align: center;
+            font-size: 7vmin;
         }
 
         .noUi-horizontal {
