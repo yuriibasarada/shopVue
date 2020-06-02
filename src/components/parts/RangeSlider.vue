@@ -25,8 +25,8 @@
         data() {
             return {
                 slider: null,
-                minValue: this.min,
-                maxValue: this.max,
+                minValue: Math.round(this.min),
+                maxValue: Math.round(this.max),
             }
         },
         props: {

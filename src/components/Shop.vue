@@ -33,8 +33,8 @@
 
 <script>
     import Item from './Item'
-    import Filters from './filters/Filters'
-    import Sorting from './sorting/Sorting'
+    import Filters from './Filters'
+    import Sorting from './Sorting'
     import paginationMixin from '@/mixins/pagination.mixin'
 
     export default {

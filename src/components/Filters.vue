@@ -1,12 +1,16 @@
 <template>
     <div class="filters" :class="{close: !this.openFilters}">
-        <categories-filter
-                :current_category_id="current_category_id"
-                :categories="categories"
-                @changeCategory="changeCategory"
-                v-show="this.openFilters"
-        />
-        <div class="test">
+        <div class="categories">
+            <single-select
+                    :default_option="'Select Category'"
+                    :options="categories"
+                    :label="'Categories'"
+                    @selectedOption="changeCategory"
+                    v-show="this.openFilters"
+            />
+        </div>
+
+        <div>
             <range-slider
                     :min="priceMinMax.min"
                     :max="priceMinMax.max"
@@ -17,7 +21,7 @@
                     v-show="this.openFilters"
             />
         </div>
-        <div class="test">
+        <div>
             <range-slider
                     :min="weightMinMax.min"
                     :max="weightMinMax.max"
@@ -28,7 +32,7 @@
                     v-show="this.openFilters"
             />
         </div>
-        <div class="test">
+        <div>
             <range-slider
                     :min="longMinMax.min"
                     :max="longMinMax.max"
@@ -39,6 +43,7 @@
                     v-show="this.openFilters"
             />
         </div>
+
         <multi-select
                 :options="brands"
                 :defaultOption="'Select Brand'"
@@ -57,14 +62,14 @@
 </template>
 
 <script>
-    import RangeSlider from "../parts/RangeSlider";
-    import MultiSelect from "../parts/MultiSelect";
-    import CategoriesFilter from "./CategoriesFilter";
+    import RangeSlider from "./parts/RangeSlider";
+    import MultiSelect from "./parts/MultiSelect";
+    import SingleSelect from "./parts/SingleSelect";
 
     export default {
 
         name: "Filters",
-        components: {RangeSlider, CategoriesFilter, MultiSelect},
+        components: {RangeSlider, SingleSelect, MultiSelect},
         data: () => ({
             categories: [
                 {
@@ -200,6 +205,18 @@
         background-color: black;
         animation: openFilters .5s forwards;
         width: 35vmin;
+
+        .categories {
+            .single-select {
+                margin-top: 5vmin;
+                margin-left: 1vmin;
+                margin-right: 1vmin;
+
+                input {
+                    color: white;
+                }
+            }
+        }
 
         &.close {
             animation: closeFilters .5s forwards;

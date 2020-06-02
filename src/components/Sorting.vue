@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import SingleSelect from "../parts/SingleSelect";
+    import SingleSelect from "./parts/SingleSelect";
 
     export default {
         name: "Sorting",
