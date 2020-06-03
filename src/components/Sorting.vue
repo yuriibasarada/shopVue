@@ -23,8 +23,7 @@
                 {id: 5, name: 'Top sales', type: 'sales', sort: 'desc'},
                 {id: 6, name: 'New', type: 'new', sort: 'asc'},
                 {id: 7, name: 'Stock', type: 'stock', sort: 'asc'},
-            ],
-            beforeSortedItems: []
+            ]
         }),
         components: {
             SingleSelect
@@ -37,7 +36,6 @@
         },
         methods: {
             selectedOption(option) {
-                this.beforeSortedItems = this.filterItems
                 let selectedOption = this.sortOptions.filter(function (value) {
                     return value.id === option
                 })[0]
