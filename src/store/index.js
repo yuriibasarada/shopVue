@@ -10,7 +10,8 @@ export default new Vuex.Store({
     state: {
         brands: [],
         materials: [],
-        categories: []
+        categories: [],
+        products: [],
     },
     actions,
     getters,

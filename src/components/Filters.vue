@@ -78,33 +78,6 @@
         name: "Filters",
         components: {RangeSlider, SingleSelect, MultiSelect},
         data: () => ({
-            categories: [
-                {
-                    id: 1,
-                    name: 'Multi',
-                    img: 'category/multi.svg'
-                },
-                {
-                    id: 2,
-                    name: 'Machete',
-                    img: 'category/machete.svg'
-                },
-                {
-                    id: 3,
-                    name: 'Flip',
-                    img: 'category/flip.svg'
-                },
-                {
-                    id: 4,
-                    name: 'Kitchen',
-                    img: 'category/kitchen.svg'
-                },
-                {
-                    id: 5,
-                    name: 'Other',
-                    img: 'category/more.svg'
-                },
-            ],
             current_category_id: 0,
             longMinMax: 0,
             weightMinMax: 0,
@@ -146,15 +119,16 @@
             changeValue(data) {
                 let p = this
                 this.filterItems = this.itemsData.filter(function (item) {
-                    return (item[data.type] >= data.value[0] && item[data.type] <= data.value[1]) &&
+                    return (parseInt(item[data.type]) >= parseInt(data.value[0]) &&
+                            parseInt(item[data.type]) <= parseInt(data.value[1])) &&
                         (p.current_category_id ? parseInt(item.category_id) === parseInt(p.current_category_id) : true)
                 })
                 this.$emit('setUpFilterItems', this.filterItems)
             },
             findMinMax(arr, type) {
-                let min = arr[0][type], max = arr[0][type];
+                let min = parseInt(arr[0][type]), max = parseInt(arr[0][type]);
                 for (let i = 1, len = arr.length; i < len; i++) {
-                    let v = arr[i][type];
+                    let v = parseInt(arr[i][type]);
                     min = (v < min) ? v : min;
                     max = (v > max) ? v : max
                 }

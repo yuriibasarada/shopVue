@@ -7,5 +7,8 @@ export default {
     },
     CATEGORIES(state) {
         return state.categories
+    },
+    PRODUCTS(state) {
+        return state.products
     }
 }

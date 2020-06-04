@@ -1,6 +1,7 @@
 import axios from 'axios'
+
 export default {
-    GET_BRANDS({ commit }) {
+    GET_BRANDS({commit}) {
         return axios('http://127.0.0.1:8000/brand', {method: 'GET'})
             .then(response => {
                 commit('SET_BRANDS', response.data)
@@ -26,5 +27,16 @@ export default {
             .catch(error => {
                 console.log(error)
             })
-    }
+    },
+    GET_PRODUCTS({commit}) {
+        return axios('http://127.0.0.1:8000/product', {
+            method: 'GET', params: {}
+        })
+            .then(response => {
+                commit('SET_PRODUCTS', response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
 }
