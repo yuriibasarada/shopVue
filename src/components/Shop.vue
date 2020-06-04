@@ -39,13 +39,11 @@
     import Item from './Item'
     import Filters from './Filters'
     import Sorting from './Sorting'
-    import paginationMixin from '@/mixins/pagination.mixin'
     import {mapActions, mapGetters} from 'vuex'
 
     export default {
         name: 'Shop',
         components: {Item, Filters, Sorting},
-        mixins: [paginationMixin],
         data: () => ({
             openFilters: true,
             filterItems: [],
@@ -53,6 +51,7 @@
         }),
         mounted() {
             this.GET_PRODUCTS({limit: this.pageSize, page: this.page}).then(() => {
+                console.log(this.PRODUCTS)
                 this.filterItems = this.PRODUCTS
                 this.setupPagination(this.filterItems)
                 this.loader = false
@@ -66,6 +65,9 @@
             setUpFilterItems(items) {
                 this.setupPagination(items)
                 this.filterItems = items
+            },
+            setupPagination() {
+                console.log('test')
             }
         },
         computed: {
