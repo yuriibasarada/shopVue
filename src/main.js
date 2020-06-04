@@ -3,6 +3,7 @@ import App from './App.vue'
 import Paginate from 'vuejs-paginate'
 import 'materialize-css/dist/js/materialize.min.js'
 import router from './router'
+import store from './store'
 
 import capitalizeFilter from './filters/capitalize.filter'
 
@@ -11,4 +12,5 @@ Vue.filter('capitalize', capitalizeFilter)
 new Vue({
   render: h => h(App),
   router,
+  store
 }).$mount('#app')

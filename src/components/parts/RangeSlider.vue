@@ -50,35 +50,36 @@
         mounted() {
             this.slider = this.$refs.slider;
             this.setUpSlider()
+
             window.M.updateTextFields()
         },
         methods: {
             setUpSlider() {
-                noUiSlider.create(this.slider, {
-                    start: [this.minValue, this.maxValue],
-                    connect: true,
-                    tooltips: [wNumb({suffix: this.unit, decimals: 0}), wNumb({suffix: this.unit, decimals: 0})],
-                    range: {
-                        'min': this.min,
-                        'max': this.max
-                    },
-                    pips: {
-                        mode: 'range',
-                        density: 4,
-                        format: wNumb({
-                            decimals: 0,
-                            prefix: this.unit
-                        })
-                    }
-                })
-                let p = this
-                this.slider.noUiSlider.on('set', this.changeSlider)
-                this.$refs.firstPriceInput.addEventListener('change', function () {
-                    p.slider.noUiSlider.set([this.value, null])
-                })
-                this.$refs.secondPriceInput.addEventListener('change', function () {
-                    p.slider.noUiSlider.set([null, this.value])
-                })
+                    noUiSlider.create(this.slider, {
+                        start: [this.minValue, this.maxValue],
+                        connect: true,
+                        tooltips: [wNumb({suffix: this.unit, decimals: 0}), wNumb({suffix: this.unit, decimals: 0})],
+                        range: {
+                            'min': this.min,
+                            'max': this.max
+                        },
+                        pips: {
+                            mode: 'range',
+                            density: 4,
+                            format: wNumb({
+                                decimals: 0,
+                                prefix: this.unit
+                            })
+                        }
+                    })
+                    let p = this
+                    this.slider.noUiSlider.on('set', this.changeSlider)
+                    this.$refs.firstPriceInput.addEventListener('change', function () {
+                        p.slider.noUiSlider.set([this.value, null])
+                    })
+                    this.$refs.secondPriceInput.addEventListener('change', function () {
+                        p.slider.noUiSlider.set([null, this.value])
+                    })
             },
             changeSlider(values, handle) {
                 let value = values[handle]

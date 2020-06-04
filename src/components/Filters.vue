@@ -1,9 +1,11 @@
 <template>
     <div class="filters" :class="{close: !this.openFilters}">
         <div class="categories">
+            <h1 v-if="loaders.category">Loader</h1>
             <single-select
-                    :default_option="'Select Category'"
-                    :options="categories"
+                    v-else
+                    :default_option="{id: 0,name: 'All', img: 'category/all.svg'}"
+                    :options="CATEGORIES"
                     :label="'Categories'"
                     @selectedOption="changeCategory"
                     v-show="this.openFilters"
@@ -44,15 +46,19 @@
             />
         </div>
 
+        <h1 v-if="loaders.brand">Loader</h1>
         <multi-select
-                :options="brands"
+                v-else
+                :options="BRANDS"
                 :defaultOption="'Select Brand'"
                 :label="'brand'"
                 @selectedOptions="selectedOptions"
                 v-show="this.openFilters"
         />
+        <h1 v-if="loaders.material">Loader</h1>
         <multi-select
-                :options="materials"
+                v-else
+                :options="MATERIALS"
                 :defaultOption="'Select Material'"
                 :label="'material'"
                 @selectedOptions="selectedOptions"
@@ -65,6 +71,7 @@
     import RangeSlider from "./parts/RangeSlider";
     import MultiSelect from "./parts/MultiSelect";
     import SingleSelect from "./parts/SingleSelect";
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
 
@@ -73,66 +80,41 @@
         data: () => ({
             categories: [
                 {
-                    id: 0,
-                    name: 'All',
-                    img: 'all.svg'
-                },
-                {
                     id: 1,
                     name: 'Multi',
-                    img: 'multi.svg'
+                    img: 'category/multi.svg'
                 },
                 {
                     id: 2,
                     name: 'Machete',
-                    img: 'machete.svg'
+                    img: 'category/machete.svg'
                 },
                 {
                     id: 3,
                     name: 'Flip',
-                    img: 'flip.svg'
+                    img: 'category/flip.svg'
                 },
                 {
                     id: 4,
                     name: 'Kitchen',
-                    img: 'kitchen.svg'
+                    img: 'category/kitchen.svg'
                 },
                 {
                     id: 5,
                     name: 'Other',
-                    img: 'more.svg'
+                    img: 'category/more.svg'
                 },
-            ],
-            brands: [
-                {
-                    id: 1,
-                    name: 'Yamakasi'
-                },
-                {
-                    id: 2,
-                    name: 'Fayon'
-                },
-                {
-                    id: 3,
-                    name: 'GoodKnifes'
-                },
-                {
-                    id: 4,
-                    name: 'OOO Jmishenko'
-                },
-            ],
-            materials: [
-                {id: 1, name: 'Strong Metal'},
-                {id: 2, name: 'Height metal'},
-                {id: 3, name: 'SS 123'},
-                {id: 4, name: 'DDD1234'},
-                {id: 5, name: 'Metal with exp'},
             ],
             current_category_id: 0,
             longMinMax: 0,
             weightMinMax: 0,
             priceMinMax: 0,
-            filterItems: []
+            filterItems: [],
+            loaders: {
+                brand: true,
+                material: true,
+                category: true
+            }
         }),
         props: {
             openFilters: {
@@ -144,12 +126,16 @@
                 default: () => []
             }
         },
+        computed: {
+            ...mapGetters(['BRANDS', 'MATERIALS', 'CATEGORIES'])
+        },
         methods: {
+            ...mapActions(['GET_BRANDS', 'GET_MATERIALS', 'GET_CATEGORIES']),
             changeCategory(category_id) {
                 this.current_category_id = category_id
                 if (category_id) {
                     this.filterItems = this.itemsData.filter(function (value) {
-                        return value.category_id === category_id
+                        return parseInt(value.category_id) === parseInt(category_id)
                     })
                 } else {
                     this.filterItems = this.itemsData
@@ -161,7 +147,7 @@
                 let p = this
                 this.filterItems = this.itemsData.filter(function (item) {
                     return (item[data.type] >= data.value[0] && item[data.type] <= data.value[1]) &&
-                        (p.current_category_id ? item.category_id === p.current_category_id : true)
+                        (p.current_category_id ? parseInt(item.category_id) === parseInt(p.current_category_id) : true)
                 })
                 this.$emit('setUpFilterItems', this.filterItems)
             },
@@ -181,8 +167,8 @@
             },
             selectedOptions(data) {
                 if (data.values.length) {
-                    let itemsWithOptions = this.filterItems.filter(function (item) {
-                        return data.values.find((i) => i === item[data.type + '_id'])
+                    let itemsWithOptions = this.filterItems.filter((item) => {
+                        return data.values.find((i) => parseInt(i) === parseInt(item[data.type + '_id']))
                     })
                     this.$emit('setUpFilterItems', itemsWithOptions)
                 } else {
@@ -192,6 +178,15 @@
         },
         mounted() {
             this.filterItems = this.itemsData
+            this.GET_BRANDS().then(() => {
+                this.loaders.brand = false
+            })
+            this.GET_MATERIALS().then(() => {
+                this.loaders.material = false
+            })
+            this.GET_CATEGORIES().then(() => {
+                this.loaders.category = false
+            })
         },
         beforeMount() {
             this.updateRangeSlider(this.itemsData)

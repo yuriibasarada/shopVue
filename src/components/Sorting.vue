@@ -2,7 +2,7 @@
     <div class="sorting">
         <single-select
                 :options="sortOptions"
-                :default_option="'Select a Sort option'"
+                :default_option="{id: 0, name: 'Default'}"
                 :label="'Sorting'"
                 @selectedOption="selectedOption"
         />
@@ -39,11 +39,16 @@
                 let selectedOption = this.sortOptions.filter(function (value) {
                     return value.id === option
                 })[0]
-                if (selectedOption.sort === 'asc') {
-                    this.filterItems.sort((a, b) => a[selectedOption.type] ? a[selectedOption.type] - b[selectedOption.type] : -1);
-                } else if (selectedOption.sort === 'desc') {
-                    this.filterItems.sort((a, b) => b[selectedOption.type] ? b[selectedOption.type] - a[selectedOption.type] : -1);
+                if(option) {
+                    if (selectedOption.sort === 'asc') {
+                        this.filterItems.sort((a, b) => a[selectedOption.type] ? a[selectedOption.type] - b[selectedOption.type] : -1);
+                    } else if (selectedOption.sort === 'desc') {
+                        this.filterItems.sort((a, b) => b[selectedOption.type] ? b[selectedOption.type] - a[selectedOption.type] : -1);
+                    }
+                } else {
+                    this.filterItems.sort((a,b) => a.id - b.id)
                 }
+
                 this.$emit('setUpSortedItems',  this.filterItems)
             }
         }

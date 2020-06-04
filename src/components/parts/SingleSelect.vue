@@ -1,8 +1,17 @@
 <template>
     <div class="input-field col s12 single-select">
         <select v-model="selected" ref="singleSelect">
-            <option value="" disabled selected>{{default_option}}</option>
-            <option v-for="option in options" :key="option.id" :value="option.id">{{option.name}}</option>
+            <option
+                    :value="default_option.id"
+                    selected
+                    :data-icon="default_option.img ? require('../../assets/img/' + default_option.img) : ''"
+            >{{default_option.name}}</option>
+            <option
+                    v-for="option in options"
+                    :key="option.id"
+                    :value="option.id"
+                    :data-icon="option.img ? require('../../assets/img/' + option.img) : ''"
+            >{{option.name}}</option>
         </select>
         <label>{{label}}</label>
     </div>
@@ -12,7 +21,7 @@
     export default {
         name: "SingleSelect",
         data: () => ({
-            selected: null,
+            selected: 0,
             singleSelect: null
         }),
         props: {
@@ -21,8 +30,8 @@
                 default: () => []
             },
             default_option: {
-                type: String,
-                default: () => ''
+                type: Object,
+                default: () => {}
             },
             label: {
                 type: String,
