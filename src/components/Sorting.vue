@@ -2,7 +2,7 @@
     <div class="sorting">
         <single-select
                 :options="sortOptions"
-                :default_option="{id: 0, name: 'Default'}"
+                :default_option="defaultOption"
                 :label="'Sorting'"
                 @selectedOption="selectedOption"
         />
@@ -16,40 +16,26 @@
         name: "Sorting",
         data: () => ({
             sortOptions: [
-                {id: 1, name: 'Sort by price up', type: 'price', sort: 'asc'},
-                {id: 2, name: 'Sort by price down', type: 'price', sort: 'desc'},
-                {id: 3, name: 'Sort by popular up', type: 'popular', sort: 'asc'},
-                {id: 4, name: 'Sort by popular down', type: 'popular', sort: 'desc'},
-                {id: 5, name: 'Top sales', type: 'sales', sort: 'desc'},
-                {id: 6, name: 'New', type: 'new', sort: 'asc'},
-                {id: 7, name: 'Stock', type: 'stock', sort: 'asc'},
-            ]
+                {id: 1, name: 'Sort by price up', sort_by: 'price', sort_type: 'asc'},
+                {id: 2, name: 'Sort by price down', sort_by: 'price', sort_type: 'desc'},
+                {id: 3, name: 'Top sales', sort_by: 'sold_time', sort_type: 'desc'},
+            ],
+            defaultOption: {id: 0, name: 'Default', sort_by: 'id', sort_type: 'asc'}
         }),
         components: {
             SingleSelect
         },
-        props: {
-            filterItems: {
-                type: Array,
-                default: () => []
-            }
-        },
         methods: {
             selectedOption(option) {
-                let selectedOption = this.sortOptions.filter(function (value) {
-                    return value.id === option
-                })[0]
-                if(option) {
-                    if (selectedOption.sort === 'asc') {
-                        this.filterItems.sort((a, b) => a[selectedOption.type] ? a[selectedOption.type] - b[selectedOption.type] : -1);
-                    } else if (selectedOption.sort === 'desc') {
-                        this.filterItems.sort((a, b) => b[selectedOption.type] ? b[selectedOption.type] - a[selectedOption.type] : -1);
-                    }
+                let selectedOption;
+                if(+option === 0) {
+                    selectedOption =  this.defaultOption
                 } else {
-                    this.filterItems.sort((a,b) => a.id - b.id)
+                    selectedOption = this.sortOptions.filter(function (value) {
+                        return value.id === option
+                    })[0]
                 }
-
-                this.$emit('setUpSortedItems',  this.filterItems)
+                this.$emit('setUpSortedItems', {sort_by: selectedOption.sort_by, sort_type: selectedOption.sort_type})
             }
         }
     }

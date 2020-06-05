@@ -78,7 +78,6 @@
         name: "Filters",
         components: {RangeSlider, SingleSelect, MultiSelect},
         data: () => ({
-            current_category_id: 0,
             longMinMax: 0,
             weightMinMax: 0,
             priceMinMax: 0,
@@ -97,6 +96,10 @@
             itemsData: {
                 type: Array,
                 default: () => []
+            },
+            current_category_id: {
+                type: Number,
+                default: () => 0
             }
         },
         computed: {
@@ -105,16 +108,7 @@
         methods: {
             ...mapActions(['GET_BRANDS', 'GET_MATERIALS', 'GET_CATEGORIES']),
             changeCategory(category_id) {
-                this.current_category_id = category_id
-                if (category_id) {
-                    this.filterItems = this.itemsData.filter(function (value) {
-                        return parseInt(value.category_id) === parseInt(category_id)
-                    })
-                } else {
-                    this.filterItems = this.itemsData
-                }
-                this.updateRangeSlider(this.filterItems)
-                this.$emit('setUpFilterItems', this.filterItems)
+                this.$emit('selectCategory', category_id)
             },
             changeValue(data) {
                 let p = this

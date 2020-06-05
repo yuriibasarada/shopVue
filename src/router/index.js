@@ -2,11 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+import Shop from "../components/Shop";
+
 const routes = [
     {
         path: '/',
         name: 'shop',
-        component: () => import('../components/Shop.vue')
+        component: Shop
     }
 ]
 

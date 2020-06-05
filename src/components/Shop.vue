@@ -1,10 +1,7 @@
 <template>
     <h1 v-if="loader">Loader</h1>
     <div v-else class="shop" :class="{full: !openFilters}">
-        <Sorting
-            :filterItems="filterItems"
-            @setUpSortedItems="setUpFilterItems"
-        />
+        <Sorting @setUpSortedItems="selectSort"/>
 
         <div class="icons">
             <i @click="toggleFilters" v-show="openFilters" class="close-button material-icons">close</i>
@@ -13,12 +10,13 @@
 
         <Filters
                 :openFilters="openFilters"
-                :itemsData="PRODUCTS"
-                @setUpFilterItems="setUpFilterItems"
+                :itemsData="PRODUCTS.products"
+                :current_category_id="current_category_id"
+                @selectCategory="selectCategory"
         />
         <div class="wrapper">
             <div class="shop__items">
-                <Item v-for="item in items" :key="item.id" :item="item"/>
+                <Item v-for="item in PRODUCTS.products" :key="item.id" :item="item"/>
             </div>
             <Paginate
                     v-model="page"
@@ -30,9 +28,7 @@
                     :page-class="'waves-effect'"
             />
         </div>
-
     </div>
-
 </template>
 
 <script>
@@ -40,20 +36,32 @@
     import Filters from './Filters'
     import Sorting from './Sorting'
     import {mapActions, mapGetters} from 'vuex'
+    import paginationMixin from '@/mixins/pagintaion.mixin'
 
     export default {
         name: 'Shop',
         components: {Item, Filters, Sorting},
-        data: () => ({
-            openFilters: true,
-            filterItems: [],
-            loader: true
-        }),
+        mixins: [paginationMixin],
+        data() {
+            return {
+                openFilters: true,
+                filterItems: [],
+                loader: true,
+                current_category_id: +this.$route.query.category_id || 0,
+                sort: {
+                    sort_by: this.$route.sort_by,
+                    sort_type: this.$route.sort_type,
+                },
+            }
+        },
         mounted() {
-            this.GET_PRODUCTS({limit: this.pageSize, page: this.page}).then(() => {
-                console.log(this.PRODUCTS)
-                this.filterItems = this.PRODUCTS
-                this.setupPagination(this.filterItems)
+            console.log(this.current_category_id)
+            this.GET_PRODUCTS({
+                limit: this.pageSize,
+                page: this.page,
+                category_id: this.current_category_id
+            }).then(() => {
+                this.setupPagination()
                 this.loader = false
             })
         },
@@ -62,13 +70,47 @@
             toggleFilters() {
                 this.openFilters = !this.openFilters
             },
-            setUpFilterItems(items) {
-                this.setupPagination(items)
-                this.filterItems = items
+            selectCategory(category_id) {
+                this.current_category_id = +category_id
+                this.page = 1
+                if(+this.$route.query !== +this.page) {
+                    this.$router.replace({ path: this.$route.path, query: {page: this.page } })
+                }
+
+                this.$router.replace({
+                    path: this.$route.path,
+                    query: {...this.$route.query, category_id: this.current_category_id} })
+
+                this.GET_PRODUCTS({
+                    limit: this.pageSize,
+                    page: this.page,
+                    category_id,
+                    sort_by: this.sort.sort_by,
+                    sort_type: this.sort.sort_type
+                }).then(() => {
+                    this.setupPagination()
+                    this.loader = false
+                })
             },
-            setupPagination() {
-                console.log('test')
+            selectSort(value) {
+                this.sort = value
+
+                this.$router.replace({
+                    path: this.$route.path,
+                    query: {...this.$route.query, sort_by: value.sort_by, sort_type: value.sort_type} })
+
+                this.GET_PRODUCTS({
+                    limit: this.pageSize,
+                    page: this.page,
+                    category_id: this.current_category_id,
+                    sort_by: value.sort_by,
+                    sort_type: value.sort_type
+                }).then(() => {
+                    this.setupPagination()
+                    this.loader = false
+                })
             }
+
         },
         computed: {
             ...mapGetters(['PRODUCTS'])

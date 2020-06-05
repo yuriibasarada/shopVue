@@ -28,9 +28,15 @@ export default {
                 console.log(error)
             })
     },
-    GET_PRODUCTS({commit}) {
+    GET_PRODUCTS({commit}, {limit, page, category_id, sort_by, sort_type}) {
         return axios('http://127.0.0.1:8000/product', {
-            method: 'GET', params: {}
+            method: 'GET', params: {
+                limit,
+                page,
+                category_id,
+                sort_by,
+                sort_type
+            }
         })
             .then(response => {
                 commit('SET_PRODUCTS', response.data)
