@@ -12,6 +12,7 @@ export default new Vuex.Store({
         materials: [],
         categories: [],
         products: [],
+        sort: []
     },
     actions,
     getters,

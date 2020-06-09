@@ -7,6 +7,7 @@
                     :default_option="{id: 0,name: 'All', img: 'category/all.svg'}"
                     :options="CATEGORIES"
                     :label="'Categories'"
+                    :current_option="current_category_id"
                     @selectedOption="changeCategory"
                     v-show="this.openFilters"
             />

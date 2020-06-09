@@ -1,7 +1,10 @@
 <template>
     <h1 v-if="loader">Loader</h1>
     <div v-else class="shop" :class="{full: !openFilters}">
-        <Sorting @setUpSortedItems="selectSort"/>
+        <Sorting
+            @setUpSortedItems="selectSort"
+            :sort_id="sort_id"
+        />
 
         <div class="icons">
             <i @click="toggleFilters" v-show="openFilters" class="close-button material-icons">close</i>
@@ -48,20 +51,17 @@
                 filterItems: [],
                 loader: true,
                 current_category_id: +this.$route.query.category_id || 0,
-                sort: {
-                    sort_by: this.$route.sort_by,
-                    sort_type: this.$route.sort_type,
-                },
+                sort_id: +this.$route.query.sort_id || 0,
             }
         },
         mounted() {
-            console.log(this.current_category_id)
             this.GET_PRODUCTS({
                 limit: this.pageSize,
                 page: this.page,
                 category_id: this.current_category_id
             }).then(() => {
                 this.setupPagination()
+                console.log('test')
                 this.loader = false
             })
         },
@@ -73,38 +73,37 @@
             selectCategory(category_id) {
                 this.current_category_id = +category_id
                 this.page = 1
-                if(+this.$route.query !== +this.page) {
-                    this.$router.replace({ path: this.$route.path, query: {page: this.page } })
+                if (+this.$route.query !== +this.page) {
+                    this.$router.replace({path: this.$route.path, query: {page: this.page}})
                 }
 
                 this.$router.replace({
                     path: this.$route.path,
-                    query: {...this.$route.query, category_id: this.current_category_id} })
+                    query: {...this.$route.query, category_id: this.current_category_id}
+                })
 
                 this.GET_PRODUCTS({
                     limit: this.pageSize,
                     page: this.page,
                     category_id,
-                    sort_by: this.sort.sort_by,
-                    sort_type: this.sort.sort_type
+                    sort_id: this.sort_id
                 }).then(() => {
                     this.setupPagination()
                     this.loader = false
                 })
             },
             selectSort(value) {
-                this.sort = value
-
+                this.sort_id = +value
                 this.$router.replace({
                     path: this.$route.path,
-                    query: {...this.$route.query, sort_by: value.sort_by, sort_type: value.sort_type} })
+                    query: {...this.$route.query, sort_id: value}
+                })
 
                 this.GET_PRODUCTS({
                     limit: this.pageSize,
                     page: this.page,
                     category_id: this.current_category_id,
-                    sort_by: value.sort_by,
-                    sort_type: value.sort_type
+                    sort_id: value,
                 }).then(() => {
                     this.setupPagination()
                     this.loader = false

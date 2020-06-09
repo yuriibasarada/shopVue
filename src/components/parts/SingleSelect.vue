@@ -21,8 +21,8 @@
     export default {
         name: "SingleSelect",
         data: () => ({
-            selected: 0,
-            singleSelect: null
+            singleSelect: null,
+            selected: 0
         }),
         props: {
             options: {
@@ -36,6 +36,10 @@
             label: {
                 type: String,
                 default: () => ''
+            },
+            current_option: {
+                type: Number,
+                default: () => 0
             }
         },
         watch: {
@@ -45,6 +49,9 @@
         },
         mounted() {
             this.singleSelect = window.M.FormSelect.init(this.$refs.singleSelect)
+        },
+        beforeMount() {
+            this.selected = this.current_option
         },
         beforeDestroy() {
             if(this.singleSelect && this.singleSelect.destroy) {

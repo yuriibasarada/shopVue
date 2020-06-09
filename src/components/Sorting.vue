@@ -1,9 +1,12 @@
 <template>
     <div class="sorting">
+        <h1 v-if="loader">Loader</h1>
         <single-select
-                :options="sortOptions"
+                v-else
+                :options="SORT"
                 :default_option="defaultOption"
                 :label="'Sorting'"
+                :current_option="sort_id"
                 @selectedOption="selectedOption"
         />
     </div>
@@ -11,32 +14,36 @@
 
 <script>
     import SingleSelect from "./parts/SingleSelect";
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "Sorting",
         data: () => ({
-            sortOptions: [
-                {id: 1, name: 'Sort by price up', sort_by: 'price', sort_type: 'asc'},
-                {id: 2, name: 'Sort by price down', sort_by: 'price', sort_type: 'desc'},
-                {id: 3, name: 'Top sales', sort_by: 'sold_time', sort_type: 'desc'},
-            ],
-            defaultOption: {id: 0, name: 'Default', sort_by: 'id', sort_type: 'asc'}
+            defaultOption: {id: 0, name: 'Default', order_by: 'id', type: 'asc'},
+            loader: true
         }),
+        props: {
+            sort_id: {
+                type: Number,
+                default: () => 0
+            }
+        },
+        computed: {
+            ...mapGetters(['SORT']),
+        },
         components: {
             SingleSelect
         },
         methods: {
+            ...mapActions(['GET_SORT']),
             selectedOption(option) {
-                let selectedOption;
-                if(+option === 0) {
-                    selectedOption =  this.defaultOption
-                } else {
-                    selectedOption = this.sortOptions.filter(function (value) {
-                        return value.id === option
-                    })[0]
-                }
-                this.$emit('setUpSortedItems', {sort_by: selectedOption.sort_by, sort_type: selectedOption.sort_type})
+                this.$emit('setUpSortedItems', option)
             }
+        },
+        mounted() {
+            this.GET_SORT().then(() => {
+                this.loader = false
+            })
         }
     }
 </script>

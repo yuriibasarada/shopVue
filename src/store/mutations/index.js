@@ -10,5 +10,8 @@ export default {
     },
     SET_PRODUCTS:(state, products) => {
         state.products = products
+    },
+    SET_SORT: (state, sort) => {
+        state.sort = sort
     }
 }

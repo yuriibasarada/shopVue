@@ -45,4 +45,13 @@ export default {
                 console.log(error)
             })
     },
+    GET_SORT({commit}) {
+        return axios('http://127.0.0.1:8000/sort', {method: 'GET'})
+            .then(response => {
+                commit('SET_SORT', response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
 }

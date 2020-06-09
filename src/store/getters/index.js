@@ -10,5 +10,8 @@ export default {
     },
     PRODUCTS(state) {
         return state.products
+    },
+    SORT(state) {
+        return state.sort
     }
 }
